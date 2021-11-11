@@ -408,7 +408,7 @@ const InfoPage = () => {
                 onClick={() => { set(!open); setAnimationComplete(false); }}>
                 <CurrentAQIContainer>
                     {!open && animationComplete ? <AQIPrompt>AQI<AQIPromptValue>{currentAQI != null ? currentAQI[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open ? <CurrentAQIDivTitle>Placeholder</CurrentAQIDivTitle> : null}
+                    {open ? <CurrentAQIDivTitle>(More Info can be placed here)</CurrentAQIDivTitle> : null}
                 </CurrentAQIContainer>
             </animated.div>
 
@@ -418,7 +418,7 @@ const InfoPage = () => {
                 onClick={() => { set2(!open2); setAnimationComplete2(false); }}>
                 <CurrentAQIContainer>
                     {!open2 && animationComplete2 ? <AQIPrompt>CO<AQIPromptValue>{currentCO != null ? currentCO[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open2 ? <CurrentAQIDivTitle>Placeholder</CurrentAQIDivTitle> : null}
+                    {open2 ? <CurrentAQIDivTitle>(More Info can be placed here)</CurrentAQIDivTitle> : null}
                 </CurrentAQIContainer>
             </animated.div>
 
@@ -428,7 +428,7 @@ const InfoPage = () => {
                 onClick={() => { set3(!open3); setAnimationComplete3(false); }}>
                 <CurrentAQIContainer>
                     {!open3 && animationComplete3 ? <AQIPrompt>O3<AQIPromptValue>{currentO3 != null ? currentO3[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open3 ? <CurrentAQIDivTitle>Placeholder</CurrentAQIDivTitle> : null}
+                    {open3 ? <CurrentAQIDivTitle>(More Info can be placed here)</CurrentAQIDivTitle> : null}
                 </CurrentAQIContainer>
             </animated.div>
 
@@ -439,7 +439,7 @@ const InfoPage = () => {
                 onClick={() => { set4(!open4); setAnimationComplete4(false); }}>
                 <CurrentAQIContainer>
                     {!open4 && animationComplete4 ? <AQIPrompt>PM10<AQIPromptValue>{currentPM10 != null ? currentPM10[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open4 ? <CurrentAQIDivTitle>Placeholder</CurrentAQIDivTitle> : null}
+                    {open4 ? <CurrentAQIDivTitle>(More Info can be placed here)</CurrentAQIDivTitle> : null}
                 </CurrentAQIContainer>
             </animated.div>
 
@@ -450,7 +450,7 @@ const InfoPage = () => {
                 onClick={() => { set5(!open5); setAnimationComplete5(false); }}>
                 <CurrentAQIContainer>
                     {!open5 && animationComplete5 ? <AQIPrompt>PM25<AQIPromptValue>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open5 ? <CurrentAQIDivTitle>Placeholder</CurrentAQIDivTitle> : null}
+                    {open5 ? <CurrentAQIDivTitle>(More Info can be placed here)</CurrentAQIDivTitle> : null}
                 </CurrentAQIContainer>
             </animated.div>
 
