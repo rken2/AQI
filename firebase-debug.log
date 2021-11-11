@@ -1,0 +1,13 @@
+[debug] [2021-11-11T21:28:25.305Z] ----------------------------------------------------------------------
+[debug] [2021-11-11T21:28:25.306Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\rocky\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2021-11-11T21:28:25.307Z] CLI Version:   9.21.0
+[debug] [2021-11-11T21:28:25.307Z] Platform:      win32
+[debug] [2021-11-11T21:28:25.307Z] Node Version:  v14.16.0
+[debug] [2021-11-11T21:28:25.307Z] Time:          Thu Nov 11 2021 13:28:25 GMT-0800 (Pacific Standard Time)
+[debug] [2021-11-11T21:28:25.308Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-11-11T21:28:25.344Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-11-11T21:28:25.344Z] > authorizing via signed-in user (nimhotking@gmail.com)
+[debug] [2021-11-11T21:28:25.345Z] [iam] checking project aqiforecast-153a1 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-11-11T21:28:25.346Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/aqiforecast-153a1:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
