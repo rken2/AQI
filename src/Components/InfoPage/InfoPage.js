@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSpring, useSpringRef, useChain, useTransition, animated, config } from 'react-spring';
+import { useSpring, useSpringRef, useChain, animated, config } from 'react-spring';
 import Autocomplete from "react-google-autocomplete";
 
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
@@ -80,11 +80,20 @@ const InfoPage = () => {
 
     let [graphZIndex, setGraphZIndex] = useState(2);
 
-    let [container1Scale, setContainer1Scale] = useState("scale(1)");
-    let [container2Scale, setContainer2Scale] = useState("scale(1)");
-    let [container3Scale, setContainer3Scale] = useState("scale(1)");
-    let [container4Scale, setContainer4Scale] = useState("scale(1)");
-    let [container5Scale, setContainer5Scale] = useState("scale(1)");
+    let [container1Translate, setContainer1Translate] = useState(false);
+    let [container1Scale, setContainer1Scale] = useState(false);
+
+    let [container2Translate, setContainer2Translate] = useState(false);
+    let [container2Scale, setContainer2Scale] = useState(false);
+
+    let [container3Translate, setContainer3Translate] = useState(false);
+    let [container3Scale, setContainer3Scale] = useState(false);
+
+    let [container4Translate, setContainer4Translate] = useState(false);
+    let [container4Scale, setContainer4Scale] = useState(false);
+
+    let [container5Translate, setContainer5Translate] = useState(false);
+    let [container5Scale, setContainer5Scale] = useState(false);
 
     useEffect(() => {
         if (window.innerWidth <= 768) {
@@ -141,7 +150,7 @@ const InfoPage = () => {
                     let dataArr = data.data;
 
                     for (var i = 0; i < dataArr.length; i++) {
-                        if (dataArr[i].station.country == appState.country) {
+                        if (dataArr[i].station.country === appState.country) {
                             stationID = dataArr[i].uid;
 
                             break;
@@ -310,20 +319,20 @@ const InfoPage = () => {
                         await setCurrentPM25(null);
                     }
 
-                    if (dataArr.forecast == undefined) {
+                    if (dataArr.forecast === undefined) {
                         await setGraphDataExist(false);
                     } else {
                         await setGraphDataExist(true);
 
-                        if (dataArr.forecast.daily.o3 != undefined) {
+                        if (dataArr.forecast.daily.o3 !== undefined) {
                             await setO3Data(dataArr.forecast.daily.o3);
                         }
 
-                        if (dataArr.forecast.daily.pm10 != undefined) {
+                        if (dataArr.forecast.daily.pm10 !== undefined) {
                             await setPM10Data(dataArr.forecast.daily.pm10);
                         }
 
-                        if (dataArr.forecast.daily.pm25 != undefined) {
+                        if (dataArr.forecast.daily.pm25 !== undefined) {
                             await setPM25Data(dataArr.forecast.daily.pm25);
                         }
                     }
@@ -333,7 +342,7 @@ const InfoPage = () => {
                 });
         }
 
-        if (appState.city != "") {
+        if (appState.city !== "") {
             fetchAQIData();
         }
     }, [appState.city]);
@@ -356,7 +365,7 @@ const InfoPage = () => {
         await setPM10Color("unset");
         await setPM25Color("unset");
 
-        if (inputValue == null || inputValue == undefined) {
+        if (inputValue === null || inputValue === undefined) {
             setError(true);
 
             return;
@@ -364,7 +373,7 @@ const InfoPage = () => {
             setError(false);
         }
 
-        if (inputValue.address_components == null || inputValue.address_components == undefined) {
+        if (inputValue.address_components === null || inputValue.address_components === undefined) {
             setError(true);
 
             return;
@@ -372,7 +381,7 @@ const InfoPage = () => {
             setError(false);
         }
 
-        if (inputValue != null || inputValue != undefined) {
+        if (inputValue !== null || inputValue !== undefined) {
             let city = inputValue.address_components[0].long_name;
 
             for (var i = 0; i < inputValue.address_components.length; i++) {
@@ -393,9 +402,9 @@ const InfoPage = () => {
 
     let handleSelection = (event) => {
         console.log(event.target.value);
-        if (event.target.value == "avg") {
+        if (event.target.value === "avg") {
             setDataChoice("avg");
-        } else if (event.target.value == "max") {
+        } else if (event.target.value === "max") {
             setDataChoice("max");
         } else {
             setDataChoice("min");
@@ -406,65 +415,65 @@ const InfoPage = () => {
     const { size, ...rest } = useSpring({
         ref: springApi,
         config: config.stiff,
-        from: { size: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container1Translate ? 'translateY(100%)' : ( container1Scale ? "scale(1)" : "scale(1.1)" ) },
         to: {
             size: open ? '30%' : cardSize,
             background: open ? 'rgb(0,0,0)' : 'rgb(0,0,0,0.2)',
-            transform: 'translateY(0%)',
+            transform: !container1Translate ? 'translateY(0%)' : ( container1Scale ? "scale(1.1)" : "scale(1)" ) ,
         },
-        onRest: () => { setAnimationComplete(true) }
+        onRest: () => { setAnimationComplete(true); setContainer1Translate(true); }
     })
 
     const springApi2 = useSpringRef()
     const { size2, ...rest2 } = useSpring({
         ref: springApi2,
         config: config.stiff,
-        from: { size2: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size2: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container2Translate ? 'translateY(100%)' : ( container2Scale ? "scale(1)" : "scale(1.1)" ) },
         to: {
             size2: open2 ? '30%' : cardSize,
             background: open2 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
-            transform: 'translateY(0%)'
+            transform: !container2Translate ? 'translateY(0%)' : ( container2Scale ? "scale(1.1)" : "scale(1)" ) ,
         },
-        onRest: () => { setAnimationComplete2(true) }
+        onRest: () => { setAnimationComplete2(true); setContainer2Translate(true); }
     })
 
     const springApi3 = useSpringRef()
     const { size3, ...rest3 } = useSpring({
         ref: springApi3,
         config: config.stiff,
-        from: { size3: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size3: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container3Translate ? 'translateY(100%)' : ( container3Scale ? "scale(1)" : "scale(1.1)" ) },
         to: {
             size3: open3 ? '30%' : cardSize,
             background: open3 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
-            transform: 'translateY(0%)'
+            transform: !container3Translate ? 'translateY(0%)' : ( container3Scale ? "scale(1.1)" : "scale(1)" ) ,
         },
-        onRest: () => { setAnimationComplete3(true) }
+        onRest: () => { setAnimationComplete3(true); setContainer3Translate(true); }
     })
 
     const springApi4 = useSpringRef()
     const { size4, ...rest4 } = useSpring({
         ref: springApi4,
         config: config.stiff,
-        from: { size4: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size4: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container4Translate ? 'translateY(100%)' : ( container4Scale ? "scale(1)" : "scale(1.1)" ) },
         to: {
             size4: open4 ? '30%' : cardSize,
             background: open4 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
-            transform: 'translateY(0%)'
+            transform: !container4Translate ? 'translateY(0%)' : ( container4Scale ? "scale(1.1)" : "scale(1)" ) ,
         },
-        onRest: () => { setAnimationComplete4(true) }
+        onRest: () => { setAnimationComplete4(true); setContainer4Translate(true); }
     })
 
     const springApi5 = useSpringRef()
     const { size5, ...rest5 } = useSpring({
         ref: springApi5,
         config: config.stiff,
-        from: { size5: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size5: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container5Translate ? 'translateY(100%)' : ( container5Scale ? "scale(1)" : "scale(1.1)" ) },
         to: {
             size5: open5 ? '30%' : cardSize,
             background: open5 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
-            transform: 'translateY(0%)'
+            transform: !container5Translate ? 'translateY(0%)' : ( container5Scale ? "scale(1.1)" : "scale(1)" ) ,
         },
-        onRest: () => { setAnimationComplete5(true) }
+        onRest: () => { setAnimationComplete5(true); setContainer5Translate(true); }
     })
 
     const springApi6 = useSpringRef()
@@ -477,15 +486,15 @@ const InfoPage = () => {
         },
     })
 
-    useChain(open ? [springApi] : [springApi]);
+    useChain(open || container1Scale ? [springApi] : [springApi]);
 
-    useChain(open2 ? [springApi2] : [springApi2]);
+    useChain(open2 || container2Scale ? [springApi2] : [springApi2]);
 
-    useChain(open3 ? [springApi3] : [springApi3]);
+    useChain(open3 || container3Scale ? [springApi3] : [springApi3]);
 
-    useChain(open4 ? [springApi4] : [springApi4]);
+    useChain(open4 || container4Scale ? [springApi4] : [springApi4]);
 
-    useChain(open5 ? [springApi5] : [springApi5]);
+    useChain(open5 || container5Scale ? [springApi5] : [springApi5]);
 
     useChain(appState.submission ? [springApi, springApi2, springApi3, springApi4, springApi5] : null);
 
@@ -546,11 +555,11 @@ const InfoPage = () => {
 
             <CardContainer>
                 <animated.div
-                    style={{ ...rest, width: size, height: size, transform: container1Scale, transition: !animationComplete ? null : ".5s ease" }}
+                    style={{ ...rest, width: size, height: size }}
                     className="container"
                     onClick={async () => { await set(!open); await setAnimationComplete(false); }}
-                    onMouseEnter={async () => { if (!open) { setContainer1Scale("scale(1.1)") } }}
-                    onMouseLeave={async () => { if (!open) { setContainer1Scale("scale(1)") } }}
+                    onMouseEnter={async () => { if (!open) { await setContainer1Scale(true) } }}
+                    onMouseLeave={async () => { if (!open) { await setContainer1Scale(false) } }}
                     >
                     <CurrentAQIContainer>
                         {!open && animationComplete ? <AQIPrompt><AQIPromptValue style={{color: AQIColor}}>{currentAQI != null ? currentAQI[0].value : "N/A"}</AQIPromptValue>AQI</AQIPrompt> : null}
@@ -559,11 +568,11 @@ const InfoPage = () => {
                 </animated.div>
 
                 <animated.div
-                    style={{ ...rest2, width: size2, height: size2, transform: container2Scale, transition: !animationComplete2 ? null : ".5s ease" }}
+                    style={{ ...rest2, width: size2, height: size2 }}
                     className="container2"
                     onClick={() => { set2(!open2); setAnimationComplete2(false); }}
-                    onMouseEnter={async () => { if (!open2) { setContainer2Scale("scale(1.1)") } }}
-                    onMouseLeave={async () => { if (!open2) { setContainer2Scale("scale(1)") } }}
+                    onMouseEnter={async () => { if (!open2) { await setContainer2Scale(true) } }}
+                    onMouseLeave={async () => { if (!open2) { await setContainer2Scale(false) } }}
                     >
                     <CurrentAQIContainer>
                         {!open2 && animationComplete2 ? <AQIPrompt><AQIPromptValue style={{color: COColor}}>{currentCO != null ? currentCO[0].value : "N/A"}</AQIPromptValue>CO</AQIPrompt> : null}
@@ -572,11 +581,11 @@ const InfoPage = () => {
                 </animated.div>
 
                 <animated.div
-                    style={{ ...rest3, width: size3, height: size3, transform: container3Scale, transition: !animationComplete3 ? null : ".5s ease" }}
+                    style={{ ...rest3, width: size3, height: size3 }}
                     className="container3"
                     onClick={() => { set3(!open3); setAnimationComplete3(false); }}
-                    onMouseEnter={async () => { if (!open3) { setContainer3Scale("scale(1.1)") } }}
-                    onMouseLeave={async () => { if (!open3) { setContainer3Scale("scale(1)") } }}
+                    onMouseEnter={async () => { if (!open3) { await setContainer3Scale(true) } }}
+                    onMouseLeave={async () => { if (!open3) { await setContainer3Scale(false) } }}
                     >
                     <CurrentAQIContainer>
                         {!open3 && animationComplete3 ? <AQIPrompt><AQIPromptValue style={{color: O3Color}}>{currentO3 != null ? currentO3[0].value : "N/A"}</AQIPromptValue>O3</AQIPrompt> : null}
@@ -586,11 +595,11 @@ const InfoPage = () => {
 
 
                 <animated.div
-                    style={{ ...rest4, width: size4, height: size4, transform: container4Scale, transition: !animationComplete4 ? null : ".5s ease" }}
+                    style={{ ...rest4, width: size4, height: size4 }}
                     className="container4"
                     onClick={() => { set4(!open4); setAnimationComplete4(false); }}
-                    onMouseEnter={async () => { if (!open4) { setContainer4Scale("scale(1.1)") } }}
-                    onMouseLeave={async () => { if (!open4) { setContainer4Scale("scale(1)") } }}
+                    onMouseEnter={async () => { if (!open4) { await setContainer4Scale(true) } }}
+                    onMouseLeave={async () => { if (!open4) { await setContainer4Scale(false) } }}
                     >
                     <CurrentAQIContainer>
                         {!open4 && animationComplete4 ? <AQIPrompt><AQIPromptValue style={{color: PM10Color}}>{currentPM10 != null ? currentPM10[0].value : "N/A"}</AQIPromptValue>PM10</AQIPrompt> : null}
@@ -600,11 +609,11 @@ const InfoPage = () => {
 
 
                 <animated.div
-                    style={{ ...rest5, width: size5, height: size5, transform: container5Scale, transition: !animationComplete5 ? null : ".5s ease" }}
+                    style={{ ...rest5, width: size5, height: size5 }}
                     className="container5"
                     onClick={() => { set5(!open5); setAnimationComplete5(false); }}
-                    onMouseEnter={async () => { if (!open5) { setContainer5Scale("scale(1.1)") } }}
-                    onMouseLeave={async () => { if (!open5) { setContainer5Scale("scale(1)") } }}
+                    onMouseEnter={async () => { if (!open5) { await setContainer5Scale(true) } }}
+                    onMouseLeave={async () => { if (!open5) { await setContainer5Scale(false) } }}
                     >
                     <CurrentAQIContainer>
                         {!open5 && animationComplete5 ? <AQIPrompt><AQIPromptValue style={{color: PM25Color}}>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue>PM2.5</AQIPrompt> : null}
