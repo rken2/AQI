@@ -26,6 +26,13 @@ const SearchPage = () => {
     let [inputValue, setInputValue] = useState(null);
     let [submission, setSubmission] = useState(false);
     let [error, setError] = useState(false);
+    let [size, setSize] = useState(60);
+
+    useEffect(() => {
+        if (window.innerWidth <= 768) {
+            setSize(30);
+        }
+    }, []);
 
     const slideInDownTitle = useSpring({
         from: {
@@ -128,7 +135,7 @@ const SearchPage = () => {
                                     onPlaceSelected={async (place) => {
                                         await setInputValue(place);
                                     }}
-                                    size="60"
+                                    size={size}
                                     style={{ borderRadius: "5px", height: "3vh" }}
                                 />
                             </SearchAutoComplete>

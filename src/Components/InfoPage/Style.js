@@ -11,6 +11,14 @@ export const SearchContainer = styled.div`
     position: absolute;
     right: 5%;
     top 3%;
+    z-index: 2;
+
+    @media only screen and (max-width: 768px) {
+        right: unset;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
 `;
 
 export const SearchForm = styled.form`
@@ -29,6 +37,12 @@ export const GraphContainer = styled.div`
     flex-direction: column;
     width: 100%;
     align-items: center;
+    z-index: 2;
+
+    @media only screen and (max-width: 768px) {
+        left: unset;
+        top: 30%;
+    }
 `;
 
 export const AQIPrompt = styled.div`
@@ -41,10 +55,19 @@ export const AQIPrompt = styled.div`
     height: 100%;
     text-align: center;
     flex-direction: column;
+    justify-content: center;
+
+    @media only screen and (max-width: 768px) {
+        font-size: 1rem;
+    }
 `;
 
 export const AQIPromptValue = styled.div`
     font-size: 4rem;
+
+    @media only screen and (max-width: 768px) {
+        font-size: 1.5rem;
+    }
 `;
 
 export const CurrentAQIContainer = styled.div`
@@ -92,6 +115,12 @@ export const GeoContainer = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
+
+    @media only screen and (max-width: 768px) {
+        left: unset;
+        top: 8%;
+        width: 100%;
+    }
 `;
 
 export const GeoCity = styled.div`
@@ -115,6 +144,10 @@ export const InfoTitle = styled.div`
     font-weight: 300;
     color: white;
     margin-left: 5%;
+
+    @media only screen and (max-width: 768px) {
+        font-size: 1rem;
+    }
 `;
 
 export const GraphErrorTitle = styled.div`
@@ -132,6 +165,10 @@ export const Selection = styled.div`
     width: 100%;
     margin-bottom: 2%;
     color: white;
+
+    @media only screen and (max-width: 768px) {
+        margin-bottom: 5%;
+    }
 `;
 
 export const SelectionAvg = styled.div`
@@ -165,4 +202,15 @@ export const SelectionDropDown = styled.select`
 export const SelectionDropDownItem = styled.option`
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
+`;
+
+export const CardContainer = styled.div`
+    position: absolute;
+    bottom: 5%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    z-index: 1;
 `;

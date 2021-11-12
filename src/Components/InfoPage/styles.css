@@ -1,61 +1,46 @@
  .container {
-    position: absolute;
     padding: 25px;
     background: white;
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.05);
     will-change: width, height;
-    bottom: 5%;
-    left: 1%;
   }
 
   .container2 {
-    position: absolute;
     padding: 25px;
     background: white;
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.05);
     will-change: width, height;
-    bottom: 5%;
-    left: 21%;
   }
 
   .container3 {
-    position: absolute;
     padding: 25px;
     background: white;
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.05);
     will-change: width, height;
-    bottom: 5%;
-    left: 41%;
   }
 
   .container4 {
-    position: absolute;
     padding: 25px;
     background: white;
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.05);
     will-change: width, height;
-    bottom: 5%;
-    right: 21%;
   }
 
   .container5 {
-    position: absolute;
     padding: 25px;
     background: white;
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.05);
     will-change: width, height;
-    bottom: 5%;
-    right: 1%;
   }
   
   .item {
@@ -67,4 +52,36 @@
     align-items: center;
     justify-content: center;
     padding: 2% 4%;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .container {
+        bottom: 0;
+        left: unset;
+        position: unset;
+    }
+
+    .container2 {
+        bottom: 0;
+        left: unset;
+        position: unset;
+    }
+
+    .container3 {
+        bottom: 0;
+        left: unset;
+        position: unset;
+    }
+
+    .container4 {
+        bottom: 0;
+        right: unset;
+        position: unset;
+    }
+
+    .container5 {
+        bottom: 0;
+        right: unset;
+        position: unset;
+    }
   }

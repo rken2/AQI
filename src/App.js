@@ -19,8 +19,13 @@ const App = () => {
   let appState = useSelector(state => state.app);
 
   useEffect(() => {
-    dispatch(setWindowWidth(window.innerWidth * 0.90));
-    dispatch(setWindowHeight(window.innerHeight * 0.4));
+    if (window.innerWidth <= 768) {
+      dispatch(setWindowWidth(window.innerWidth * 0.85));
+      dispatch(setWindowHeight(window.innerHeight * 0.45));
+    } else {
+      dispatch(setWindowWidth(window.innerWidth * 0.90));
+      dispatch(setWindowHeight(window.innerHeight * 0.4));
+    }
 
     window.addEventListener("resize", () => {
       dispatch(setWindowWidth(window.innerWidth * 0.90));

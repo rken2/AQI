@@ -25,7 +25,8 @@ import {
     GraphErrorTitle,
     Selection,
     SelectionDropDown,
-    SelectionDropDownItem
+    SelectionDropDownItem,
+    CardContainer
 } from "./Style";
 
 import {
@@ -61,6 +62,22 @@ const InfoPage = () => {
     let [open3, set3] = useState(false);
     let [open4, set4] = useState(false);
     let [open5, set5] = useState(false);
+
+    let [legendWidth, setLegendWidth] = useState(300);
+    let [cardSize, setCardSize] = useState("15%");
+
+    let [AQIColor, setAQIColor] = useState("unset");
+    let [COColor, setCOColor] = useState("unset");
+    let [O3Color, setO3Color] = useState("unset");
+    let [PM10Color, setPM10Color] = useState("unset");
+    let [PM25Color, setPM25Color] = useState("unset");
+
+    useEffect(() => {
+        if (window.innerWidth <= 768) {
+            setLegendWidth(100);
+            setCardSize("5%");
+        }
+    }, []);
 
     useEffect(() => {
         let series = [];
@@ -133,45 +150,142 @@ const InfoPage = () => {
                         let temp = [];
                         temp.push({ name: "AQI", value: dataArr.aqi, css: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' });
 
-                        setCurrentAQI(temp);
+                        if (dataArr.aqi <= 50) {
+                            await setAQIColor("green");
+                        } else if (dataArr.aqi > 50 && dataArr.aqi <= 100) {
+                            await setAQIColor("yellow");
+                        } else if (dataArr.aqi > 100 && dataArr.aqi <= 150) {
+                            await setAQIColor("orange");
+                        } else if (dataArr.aqi > 150 && dataArr.aqi <= 200) {
+                            await setAQIColor("red");
+                        } else if (dataArr.aqi > 200 && dataArr.aqi <= 300) {
+                            await setAQIColor("purple");
+                        } else {
+                            await setAQIColor("maroon");
+                        }
+
+
+                        await setCurrentAQI(temp);
                     } else {
-                        setCurrentAQI(null);
+                        await setCurrentAQI(null);
                     }
 
                     if (dataArr.iaqi.co) {
                         let temp = [];
                         temp.push({ name: "CO", value: dataArr.iaqi.co.v, css: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' });
 
-                        setCurrentCO(temp);
+                        if (dataArr.iaqi.co.v <= 4.4) {
+                            await setCOColor("rgb(0,228,0)");
+                        } else if (dataArr.iaqi.co.v > 4.4 && dataArr.iaqi.co.v <= 9.4) {
+                            await setCOColor("rgb(255,255,0)");
+                        } else if (dataArr.iaqi.co.v > 9.4 && dataArr.iaqi.co.v <= 12.4) {
+                            await setCOColor("rgb(255,126,0)");
+                        } else if (dataArr.iaqi.co.v > 12.4 && dataArr.iaqi.co.v <= 15.4) {
+                            await setCOColor("rgb(255,0,0)");
+                        } else if (dataArr.iaqi.co.v > 15.4 && dataArr.iaqi.co.v <= 30.4) {
+                            await setCOColor("rgb(255,255,0)");
+                        } else if (dataArr.iaqi.co.v > 30.4 && dataArr.iaqi.co.v <= 40.4) {
+                            await setCOColor("rgb(153,0,76)");
+                        } else {
+                            await setCOColor("rgb(126,0,35)");
+                        }
+
+                        await setCurrentCO(temp);
                     } else {
-                        setCurrentCO(null);
+                        await setCurrentCO(null);
                     }
 
                     if (dataArr.iaqi.o3) {
                         let temp = [];
                         temp.push({ name: "O3", value: dataArr.iaqi.o3.v, css: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' });
 
-                        setCurrentO3(temp);
+                        if (dataArr.iaqi.o3.v <= 33) {
+                            await setO3Color("rgb(204,255,204)");
+                        } else if (dataArr.iaqi.o3.v > 33 && dataArr.iaqi.o3.v <= 66) {
+                            await setO3Color("rgb(102,255,102)");
+                        } else if (dataArr.iaqi.o3.v > 66 && dataArr.iaqi.o3.v <= 100) {
+                            await setO3Color("rgb(0,255,0)");
+                        } else if (dataArr.iaqi.o3.v > 100 && dataArr.iaqi.o3.v <= 120) {
+                            await setO3Color("rgb(153,255,0)");
+                        } else if (dataArr.iaqi.o3.v > 120 && dataArr.iaqi.o3.v <= 140) {
+                            await setO3Color("rgb(255,255,0)");
+                        } else if (dataArr.iaqi.o3.v > 140 && dataArr.iaqi.o3.v <= 160) {
+                            await setO3Color("rgb(255,204,0)");
+                        } else if (dataArr.iaqi.o3.v > 160 && dataArr.iaqi.o3.v <= 187) {
+                            await setO3Color("rgb(255,102,0)");
+                        } else if (dataArr.iaqi.o3.v > 187 && dataArr.iaqi.o3.v <= 213) {
+                            await setO3Color("rgb(255,51,0)");
+                        }else if (dataArr.iaqi.o3.v > 213 && dataArr.iaqi.o3.v <= 240) {
+                            await setO3Color("rgb(255,0,0)");
+                        } else {
+                            await setO3Color("rgb(255,0,102)");
+                        }
+
+                        await setCurrentO3(temp);
                     } else {
-                        setCurrentO3(null);
+                        await setCurrentO3(null);
                     }
 
                     if (dataArr.iaqi.pm10) {
                         let temp = [];
                         temp.push({ name: "PM10", value: dataArr.iaqi.pm10.v, css: 'linear-gradient(135deg, #E3FDF5 0%, #FFE6FA 100%)' });
 
-                        setCurrentPM10(temp);
+                        if (dataArr.iaqi.pm10.v <= 11) {
+                            await setPM10Color("rgb(204,255,204)");
+                        } else if (dataArr.iaqi.pm10.v > 11 && dataArr.iaqi.pm10.v <= 23) {
+                            await setPM10Color("rgb(102,255,102)");
+                        } else if (dataArr.iaqi.pm10.v > 23 && dataArr.iaqi.pm10.v <= 35) {
+                            await setPM10Color("rgb(0,255,0)");
+                        } else if (dataArr.iaqi.pm10.v > 35 && dataArr.iaqi.pm10.v <= 41) {
+                            await setPM10Color("rgb(153,255,0)");
+                        } else if (dataArr.iaqi.pm10.v > 41 && dataArr.iaqi.pm10.v <= 47) {
+                            await setPM10Color("rgb(255,255,0)");
+                        } else if (dataArr.iaqi.pm10.v > 47 && dataArr.iaqi.pm10.v <= 53) {
+                            await setPM10Color("rgb(255,204,0)");
+                        } else if (dataArr.iaqi.pm10.v > 53 && dataArr.iaqi.pm10.v <= 58) {
+                            await setPM10Color("rgb(255,102,0)");
+                        } else if (dataArr.iaqi.pm10.v > 58 && dataArr.iaqi.pm10.v <= 64) {
+                            await setPM10Color("rgb(255,51,0)");
+                        }else if (dataArr.iaqi.pm10.v > 64 && dataArr.iaqi.pm10.v <= 70) {
+                            await setPM10Color("rgb(255,0,0)");
+                        } else {
+                            await setPM10Color("rgb(255,0,102)");
+                        }
+
+                        await setCurrentPM10(temp);
                     } else {
-                        setCurrentPM10(null);
+                        await setCurrentPM10(null);
                     }
 
                     if (dataArr.iaqi.pm25) {
                         let temp = [];
                         temp.push({ name: "PM25", value: dataArr.iaqi.pm25.v, css: 'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)' });
 
-                        setCurrentPM25(temp);
+                        if (dataArr.iaqi.pm25.v <= 16) {
+                            await setPM25Color("rgb(204,255,204)");
+                        } else if (dataArr.iaqi.pm25.v > 16 && dataArr.iaqi.pm25.v <= 33) {
+                            await setPM25Color("rgb(102,255,102)");
+                        } else if (dataArr.iaqi.pm25.v > 33 && dataArr.iaqi.pm25.v <= 50) {
+                            await setPM25Color("rgb(0,255,0)");
+                        } else if (dataArr.iaqi.pm25.v > 50 && dataArr.iaqi.pm25.v <= 58) {
+                            await setPM25Color("rgb(153,255,0)");
+                        } else if (dataArr.iaqi.pm25.v > 58 && dataArr.iaqi.pm25.v <= 66) {
+                            await setPM25Color("rgb(255,255,0)");
+                        } else if (dataArr.iaqi.pm25.v > 66 && dataArr.iaqi.pm25.v <= 75) {
+                            await setPM25Color("rgb(255,204,0)");
+                        } else if (dataArr.iaqi.pm25.v > 75 && dataArr.iaqi.pm25.v <= 83) {
+                            await setPM25Color("rgb(255,102,0)");
+                        } else if (dataArr.iaqi.pm25.v > 83 && dataArr.iaqi.pm25.v <= 91) {
+                            await setPM25Color("rgb(255,51,0)");
+                        }else if (dataArr.iaqi.pm25.v > 91 && dataArr.iaqi.pm25.v <= 100) {
+                            await setPM25Color("rgb(255,0,0)");
+                        } else {
+                            await setPM25Color("rgb(255,0,102)");
+                        }
+
+                        await setCurrentPM25(temp);
                     } else {
-                        setCurrentPM25(null);
+                        await setCurrentPM25(null);
                     }
 
                     if (dataArr.forecast == undefined) {
@@ -214,6 +328,11 @@ const InfoPage = () => {
         await setCurrentPM10(null);
         await setCurrentPM25(null);
         await setGraphDataExist(null);
+        await setAQIColor("unset");
+        await setCOColor("unset");
+        await setO3Color("unset");
+        await setPM10Color("unset");
+        await setPM25Color("unset");
 
         if (inputValue == null || inputValue == undefined) {
             setError(true);
@@ -265,9 +384,9 @@ const InfoPage = () => {
     const { size, ...rest } = useSpring({
         ref: springApi,
         config: config.stiff,
-        from: { size: '15%', background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
-            size: open ? '30%' : '15%',
+            size: open ? '30%' : cardSize,
             background: open ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
@@ -278,9 +397,9 @@ const InfoPage = () => {
     const { size2, ...rest2 } = useSpring({
         ref: springApi2,
         config: config.stiff,
-        from: { size2: '15%', background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size2: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
-            size2: open2 ? '30%' : '15%',
+            size2: open2 ? '30%' : cardSize,
             background: open2 ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
@@ -291,9 +410,9 @@ const InfoPage = () => {
     const { size3, ...rest3 } = useSpring({
         ref: springApi3,
         config: config.stiff,
-        from: { size3: '15%', background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size3: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
-            size3: open3 ? '30%' : '15%',
+            size3: open3 ? '30%' : cardSize,
             background: open3 ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
@@ -304,9 +423,9 @@ const InfoPage = () => {
     const { size4, ...rest4 } = useSpring({
         ref: springApi4,
         config: config.stiff,
-        from: { size4: '15%', background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size4: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
-            size4: open4 ? '30%' : '15%',
+            size4: open4 ? '30%' : cardSize,
             background: open4 ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
@@ -317,9 +436,9 @@ const InfoPage = () => {
     const { size5, ...rest5 } = useSpring({
         ref: springApi5,
         config: config.stiff,
-        from: { size5: '15%', background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
+        from: { size5: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
-            size5: open5 ? '30%' : '15%',
+            size5: open5 ? '30%' : cardSize,
             background: open5 ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
@@ -391,7 +510,7 @@ const InfoPage = () => {
                                     <YAxis dataKey={dataChoice} type="number" />
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <Tooltip />
-                                    <Legend width={300} wrapperStyle={{ top: 0, right: 0, backgroundColor: '#f5f5f5', border: '1px solid #d5d5d5', borderRadius: 3, lineHeight: '20px' }} />
+                                    <Legend width={legendWidth} wrapperStyle={{ top: 0, right: 0, backgroundColor: '#f5f5f5', border: '1px solid #d5d5d5', borderRadius: 3, lineHeight: '20px' }} />
                                     {dataSeries.map(s => (
                                         <Line dataKey={dataChoice} data={s.data} name={s.name} key={s.name} stroke={s.color} />
                                     ))}
@@ -402,61 +521,63 @@ const InfoPage = () => {
                 }
             </animated.div>
 
-            <animated.div
-                style={{ ...rest, width: size, height: size }}
-                className="container"
-                onClick={() => { set(!open); setAnimationComplete(false); }}>
-                <CurrentAQIContainer>
-                    {!open && animationComplete ? <AQIPrompt>AQI<AQIPromptValue>{currentAQI != null ? currentAQI[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
-                </CurrentAQIContainer>
-            </animated.div>
+            <CardContainer>
+                <animated.div
+                    style={{ ...rest, width: size, height: size }}
+                    className="container"
+                    onClick={() => { set(!open); setAnimationComplete(false); }}>
+                    <CurrentAQIContainer>
+                        {!open && animationComplete ? <AQIPrompt><AQIPromptValue style={{color: AQIColor}}>{currentAQI != null ? currentAQI[0].value : "N/A"}</AQIPromptValue>AQI</AQIPrompt> : null}
+                        {open ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                    </CurrentAQIContainer>
+                </animated.div>
 
-            <animated.div
-                style={{ ...rest2, width: size2, height: size2 }}
-                className="container2"
-                onClick={() => { set2(!open2); setAnimationComplete2(false); }}>
-                <CurrentAQIContainer>
-                    {!open2 && animationComplete2 ? <AQIPrompt>CO<AQIPromptValue>{currentCO != null ? currentCO[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open2 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
-                </CurrentAQIContainer>
-            </animated.div>
+                <animated.div
+                    style={{ ...rest2, width: size2, height: size2 }}
+                    className="container2"
+                    onClick={() => { set2(!open2); setAnimationComplete2(false); }}>
+                    <CurrentAQIContainer>
+                        {!open2 && animationComplete2 ? <AQIPrompt><AQIPromptValue style={{color: COColor}}>{currentCO != null ? currentCO[0].value : "N/A"}</AQIPromptValue>CO</AQIPrompt> : null}
+                        {open2 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                    </CurrentAQIContainer>
+                </animated.div>
 
-            <animated.div
-                style={{ ...rest3, width: size3, height: size3 }}
-                className="container3"
-                onClick={() => { set3(!open3); setAnimationComplete3(false); }}>
-                <CurrentAQIContainer>
-                    {!open3 && animationComplete3 ? <AQIPrompt>O3<AQIPromptValue>{currentO3 != null ? currentO3[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open3 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
-                </CurrentAQIContainer>
-            </animated.div>
-
-
-            <animated.div
-                style={{ ...rest4, width: size4, height: size4 }}
-                className="container4"
-                onClick={() => { set4(!open4); setAnimationComplete4(false); }}>
-                <CurrentAQIContainer>
-                    {!open4 && animationComplete4 ? <AQIPrompt>PM10<AQIPromptValue>{currentPM10 != null ? currentPM10[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open4 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
-                </CurrentAQIContainer>
-            </animated.div>
+                <animated.div
+                    style={{ ...rest3, width: size3, height: size3 }}
+                    className="container3"
+                    onClick={() => { set3(!open3); setAnimationComplete3(false); }}>
+                    <CurrentAQIContainer>
+                        {!open3 && animationComplete3 ? <AQIPrompt><AQIPromptValue style={{color: O3Color}}>{currentO3 != null ? currentO3[0].value : "N/A"}</AQIPromptValue>O3</AQIPrompt> : null}
+                        {open3 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                    </CurrentAQIContainer>
+                </animated.div>
 
 
-            <animated.div
-                style={{ ...rest5, width: size5, height: size5 }}
-                className="container5"
-                onClick={() => { set5(!open5); setAnimationComplete5(false); }}>
-                <CurrentAQIContainer>
-                    {!open5 && animationComplete5 ? <AQIPrompt>PM25<AQIPromptValue>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue></AQIPrompt> : null}
-                    {open5 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
-                </CurrentAQIContainer>
-            </animated.div>
+                <animated.div
+                    style={{ ...rest4, width: size4, height: size4 }}
+                    className="container4"
+                    onClick={() => { set4(!open4); setAnimationComplete4(false); }}>
+                    <CurrentAQIContainer>
+                        {!open4 && animationComplete4 ? <AQIPrompt><AQIPromptValue style={{color: PM10Color}}>{currentPM10 != null ? currentPM10[0].value : "N/A"}</AQIPromptValue>PM10</AQIPrompt> : null}
+                        {open4 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                    </CurrentAQIContainer>
+                </animated.div>
+
+
+                <animated.div
+                    style={{ ...rest5, width: size5, height: size5 }}
+                    className="container5"
+                    onClick={() => { set5(!open5); setAnimationComplete5(false); }}>
+                    <CurrentAQIContainer>
+                        {!open5 && animationComplete5 ? <AQIPrompt><AQIPromptValue style={{color: PM25Color}}>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue>PM25</AQIPrompt> : null}
+                        {open5 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                    </CurrentAQIContainer>
+                </animated.div>
+            </CardContainer>
 
             <GeoContainer>
                 <GeoCity>{appState.city}</GeoCity>
-                <GeoCord>Latitude: {appState.lat} Longitude: {appState.long}</GeoCord>
+                <GeoCord>({appState.lat}, {appState.long})</GeoCord>
             </GeoContainer>
         </InfoMain>
     );

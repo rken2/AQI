@@ -47,4 +47,8 @@ export const SearchTitle = styled.div`
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
     margin-bottom: 5%;
+
+    @media only screen and (max-width: 768px) {
+        font-size: 2rem;
+    }
 `;
