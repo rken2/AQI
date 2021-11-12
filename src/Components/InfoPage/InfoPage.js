@@ -80,6 +80,12 @@ const InfoPage = () => {
 
     let [graphZIndex, setGraphZIndex] = useState(2);
 
+    let [container1Scale, setContainer1Scale] = useState("scale(1)");
+    let [container2Scale, setContainer2Scale] = useState("scale(1)");
+    let [container3Scale, setContainer3Scale] = useState("scale(1)");
+    let [container4Scale, setContainer4Scale] = useState("scale(1)");
+    let [container5Scale, setContainer5Scale] = useState("scale(1)");
+
     useEffect(() => {
         if (window.innerWidth <= 768) {
             setLegendWidth(100);
@@ -404,7 +410,7 @@ const InfoPage = () => {
         to: {
             size: open ? '30%' : cardSize,
             background: open ? 'rgb(0,0,0)' : 'rgb(0,0,0,0.2)',
-            transform: 'translateY(0%)'
+            transform: 'translateY(0%)',
         },
         onRest: () => { setAnimationComplete(true) }
     })
@@ -540,9 +546,12 @@ const InfoPage = () => {
 
             <CardContainer>
                 <animated.div
-                    style={{ ...rest, width: size, height: size }}
+                    style={{ ...rest, width: size, height: size, transform: container1Scale, transition: !animationComplete ? null : ".5s ease" }}
                     className="container"
-                    onClick={async () => { await set(!open); await setAnimationComplete(false); }}>
+                    onClick={async () => { await set(!open); await setAnimationComplete(false); }}
+                    onMouseEnter={async () => { if (!open) { setContainer1Scale("scale(1.1)") } }}
+                    onMouseLeave={async () => { if (!open) { setContainer1Scale("scale(1)") } }}
+                    >
                     <CurrentAQIContainer>
                         {!open && animationComplete ? <AQIPrompt><AQIPromptValue style={{color: AQIColor}}>{currentAQI != null ? currentAQI[0].value : "N/A"}</AQIPromptValue>AQI</AQIPrompt> : null}
                         {open ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={AQIIndexImg} alt="AQI Index Levels"/></CurrentAQIDivTitle> : null}
@@ -550,9 +559,12 @@ const InfoPage = () => {
                 </animated.div>
 
                 <animated.div
-                    style={{ ...rest2, width: size2, height: size2 }}
+                    style={{ ...rest2, width: size2, height: size2, transform: container2Scale, transition: !animationComplete2 ? null : ".5s ease" }}
                     className="container2"
-                    onClick={() => { set2(!open2); setAnimationComplete2(false); }}>
+                    onClick={() => { set2(!open2); setAnimationComplete2(false); }}
+                    onMouseEnter={async () => { if (!open2) { setContainer2Scale("scale(1.1)") } }}
+                    onMouseLeave={async () => { if (!open2) { setContainer2Scale("scale(1)") } }}
+                    >
                     <CurrentAQIContainer>
                         {!open2 && animationComplete2 ? <AQIPrompt><AQIPromptValue style={{color: COColor}}>{currentCO != null ? currentCO[0].value : "N/A"}</AQIPromptValue>CO</AQIPrompt> : null}
                         {open2 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={COIndexImg} alt="CO Index Levels"/></CurrentAQIDivTitle> : null}
@@ -560,9 +572,12 @@ const InfoPage = () => {
                 </animated.div>
 
                 <animated.div
-                    style={{ ...rest3, width: size3, height: size3 }}
+                    style={{ ...rest3, width: size3, height: size3, transform: container3Scale, transition: !animationComplete3 ? null : ".5s ease" }}
                     className="container3"
-                    onClick={() => { set3(!open3); setAnimationComplete3(false); }}>
+                    onClick={() => { set3(!open3); setAnimationComplete3(false); }}
+                    onMouseEnter={async () => { if (!open3) { setContainer3Scale("scale(1.1)") } }}
+                    onMouseLeave={async () => { if (!open3) { setContainer3Scale("scale(1)") } }}
+                    >
                     <CurrentAQIContainer>
                         {!open3 && animationComplete3 ? <AQIPrompt><AQIPromptValue style={{color: O3Color}}>{currentO3 != null ? currentO3[0].value : "N/A"}</AQIPromptValue>O3</AQIPrompt> : null}
                         {open3 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={O3IndexImg} alt="O3 Index Levels"/></CurrentAQIDivTitle> : null}
@@ -571,9 +586,12 @@ const InfoPage = () => {
 
 
                 <animated.div
-                    style={{ ...rest4, width: size4, height: size4 }}
+                    style={{ ...rest4, width: size4, height: size4, transform: container4Scale, transition: !animationComplete4 ? null : ".5s ease" }}
                     className="container4"
-                    onClick={() => { set4(!open4); setAnimationComplete4(false); }}>
+                    onClick={() => { set4(!open4); setAnimationComplete4(false); }}
+                    onMouseEnter={async () => { if (!open4) { setContainer4Scale("scale(1.1)") } }}
+                    onMouseLeave={async () => { if (!open4) { setContainer4Scale("scale(1)") } }}
+                    >
                     <CurrentAQIContainer>
                         {!open4 && animationComplete4 ? <AQIPrompt><AQIPromptValue style={{color: PM10Color}}>{currentPM10 != null ? currentPM10[0].value : "N/A"}</AQIPromptValue>PM10</AQIPrompt> : null}
                         {open4 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={PM10IndexImg} alt="PM10 Index Levels"/></CurrentAQIDivTitle> : null}
@@ -582,9 +600,12 @@ const InfoPage = () => {
 
 
                 <animated.div
-                    style={{ ...rest5, width: size5, height: size5 }}
+                    style={{ ...rest5, width: size5, height: size5, transform: container5Scale, transition: !animationComplete5 ? null : ".5s ease" }}
                     className="container5"
-                    onClick={() => { set5(!open5); setAnimationComplete5(false); }}>
+                    onClick={() => { set5(!open5); setAnimationComplete5(false); }}
+                    onMouseEnter={async () => { if (!open5) { setContainer5Scale("scale(1.1)") } }}
+                    onMouseLeave={async () => { if (!open5) { setContainer5Scale("scale(1)") } }}
+                    >
                     <CurrentAQIContainer>
                         {!open5 && animationComplete5 ? <AQIPrompt><AQIPromptValue style={{color: PM25Color}}>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue>PM2.5</AQIPrompt> : null}
                         {open5 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={PM25IndexImg} alt="PM25 Index Levels"/></CurrentAQIDivTitle> : null}
