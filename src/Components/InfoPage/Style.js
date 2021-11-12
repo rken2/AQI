@@ -37,7 +37,6 @@ export const GraphContainer = styled.div`
     flex-direction: column;
     width: 100%;
     align-items: center;
-    z-index: 2;
 
     @media only screen and (max-width: 768px) {
         left: unset;
@@ -80,13 +79,14 @@ export const CurrentAQIContainer = styled.div`
 `;
 
 export const CurrentAQIDivTitle = styled.div`
+    position: relative;
     width: 100%;
+    height: 100%;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    margin-bottom: 10%;
 `;
 
 export const CurrentAQIDiv = styled.div`
@@ -197,6 +197,7 @@ export const SelectionDropDown = styled.select`
     right: 5%;
     border-radius: 5px;
     padding: 0.5% 1%;
+    z-index: 2;
 `;
 
 export const SelectionDropDownItem = styled.option`

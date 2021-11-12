@@ -5,6 +5,12 @@ import Autocomplete from "react-google-autocomplete";
 
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
+import AQIIndexImg from "../../static/AQIIndex.png";
+import COIndexImg from "../../static/COIndex.png";
+import O3IndexImg from "../../static/O3Index.png";
+import PM10IndexImg from "../../static/PM10Index.png";
+import PM25IndexImg from "../../static/PM25Index.png";
+
 import { token } from "../../token";
 import "./styles.css";
 
@@ -72,12 +78,22 @@ const InfoPage = () => {
     let [PM10Color, setPM10Color] = useState("unset");
     let [PM25Color, setPM25Color] = useState("unset");
 
+    let [graphZIndex, setGraphZIndex] = useState(2);
+
     useEffect(() => {
         if (window.innerWidth <= 768) {
             setLegendWidth(100);
             setCardSize("5%");
         }
     }, []);
+
+    useEffect(() => {
+        if (!open && !open2 && !open3 && !open4 && !open5) {
+            setGraphZIndex(2);
+        } else {
+            setGraphZIndex(0);
+        }
+    }, [open, open2, open3, open4, open5]);
 
     useEffect(() => {
         let series = [];
@@ -259,7 +275,7 @@ const InfoPage = () => {
 
                     if (dataArr.iaqi.pm25) {
                         let temp = [];
-                        temp.push({ name: "PM25", value: dataArr.iaqi.pm25.v, css: 'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)' });
+                        temp.push({ name: "PM2.5", value: dataArr.iaqi.pm25.v, css: 'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)' });
 
                         if (dataArr.iaqi.pm25.v <= 16) {
                             await setPM25Color("rgb(204,255,204)");
@@ -387,7 +403,7 @@ const InfoPage = () => {
         from: { size: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
             size: open ? '30%' : cardSize,
-            background: open ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
+            background: open ? 'rgb(0,0,0)' : 'rgb(0,0,0,0.2)',
             transform: 'translateY(0%)'
         },
         onRest: () => { setAnimationComplete(true) }
@@ -400,7 +416,7 @@ const InfoPage = () => {
         from: { size2: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
             size2: open2 ? '30%' : cardSize,
-            background: open2 ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
+            background: open2 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
         onRest: () => { setAnimationComplete2(true) }
@@ -413,7 +429,7 @@ const InfoPage = () => {
         from: { size3: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
             size3: open3 ? '30%' : cardSize,
-            background: open3 ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
+            background: open3 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
         onRest: () => { setAnimationComplete3(true) }
@@ -426,7 +442,7 @@ const InfoPage = () => {
         from: { size4: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
             size4: open4 ? '30%' : cardSize,
-            background: open4 ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
+            background: open4 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
         onRest: () => { setAnimationComplete4(true) }
@@ -439,7 +455,7 @@ const InfoPage = () => {
         from: { size5: cardSize, background: 'rgb(0,0,0, 0.2)', transform: 'translateY(100%)' },
         to: {
             size5: open5 ? '30%' : cardSize,
-            background: open5 ? 'rgb(0,0,0, 0.5)' : 'rgb(0,0,0, 0.2)',
+            background: open5 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
             transform: 'translateY(0%)'
         },
         onRest: () => { setAnimationComplete5(true) }
@@ -490,6 +506,7 @@ const InfoPage = () => {
                     <SearchSubmit type="submit" />
                 </SearchForm>
             </SearchContainer>
+
             <animated.div style={graphFade}>
                 {graphDataExist == null ? <GraphErrorTitle>Loading...</GraphErrorTitle> :
                     <div>
@@ -505,7 +522,7 @@ const InfoPage = () => {
                                         <SelectionDropDownItem id="min" value="min">Minimum</SelectionDropDownItem>
                                     </SelectionDropDown>
                                 </Selection>
-                                <LineChart width={appState.windowWidth} height={appState.windowHeight}>
+                                <LineChart width={appState.windowWidth} height={appState.windowHeight} style={{zIndex: graphZIndex}}>
                                     <XAxis dataKey="day" type="category" allowDuplicatedCategory={false} />
                                     <YAxis dataKey={dataChoice} type="number" />
                                     <CartesianGrid strokeDasharray="3 3" />
@@ -525,10 +542,10 @@ const InfoPage = () => {
                 <animated.div
                     style={{ ...rest, width: size, height: size }}
                     className="container"
-                    onClick={() => { set(!open); setAnimationComplete(false); }}>
+                    onClick={async () => { await set(!open); await setAnimationComplete(false); }}>
                     <CurrentAQIContainer>
                         {!open && animationComplete ? <AQIPrompt><AQIPromptValue style={{color: AQIColor}}>{currentAQI != null ? currentAQI[0].value : "N/A"}</AQIPromptValue>AQI</AQIPrompt> : null}
-                        {open ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                        {open ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={AQIIndexImg} alt="AQI Index Levels"/></CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -538,7 +555,7 @@ const InfoPage = () => {
                     onClick={() => { set2(!open2); setAnimationComplete2(false); }}>
                     <CurrentAQIContainer>
                         {!open2 && animationComplete2 ? <AQIPrompt><AQIPromptValue style={{color: COColor}}>{currentCO != null ? currentCO[0].value : "N/A"}</AQIPromptValue>CO</AQIPrompt> : null}
-                        {open2 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                        {open2 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={COIndexImg} alt="CO Index Levels"/></CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -548,7 +565,7 @@ const InfoPage = () => {
                     onClick={() => { set3(!open3); setAnimationComplete3(false); }}>
                     <CurrentAQIContainer>
                         {!open3 && animationComplete3 ? <AQIPrompt><AQIPromptValue style={{color: O3Color}}>{currentO3 != null ? currentO3[0].value : "N/A"}</AQIPromptValue>O3</AQIPrompt> : null}
-                        {open3 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                        {open3 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={O3IndexImg} alt="O3 Index Levels"/></CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -559,7 +576,7 @@ const InfoPage = () => {
                     onClick={() => { set4(!open4); setAnimationComplete4(false); }}>
                     <CurrentAQIContainer>
                         {!open4 && animationComplete4 ? <AQIPrompt><AQIPromptValue style={{color: PM10Color}}>{currentPM10 != null ? currentPM10[0].value : "N/A"}</AQIPromptValue>PM10</AQIPrompt> : null}
-                        {open4 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                        {open4 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={PM10IndexImg} alt="PM10 Index Levels"/></CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -569,8 +586,8 @@ const InfoPage = () => {
                     className="container5"
                     onClick={() => { set5(!open5); setAnimationComplete5(false); }}>
                     <CurrentAQIContainer>
-                        {!open5 && animationComplete5 ? <AQIPrompt><AQIPromptValue style={{color: PM25Color}}>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue>PM25</AQIPrompt> : null}
-                        {open5 ? <CurrentAQIDivTitle>(Extra Info)</CurrentAQIDivTitle> : null}
+                        {!open5 && animationComplete5 ? <AQIPrompt><AQIPromptValue style={{color: PM25Color}}>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue>PM2.5</AQIPrompt> : null}
+                        {open5 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={PM25IndexImg} alt="PM25 Index Levels"/></CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
             </CardContainer>
