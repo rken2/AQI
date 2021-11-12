@@ -5,12 +5,6 @@ import Autocomplete from "react-google-autocomplete";
 
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
-import AQIIndexImg from "../../static/AQIIndex.png";
-import COIndexImg from "../../static/COIndex.png";
-import O3IndexImg from "../../static/O3Index.png";
-import PM10IndexImg from "../../static/PM10Index.png";
-import PM25IndexImg from "../../static/PM25Index.png";
-
 import { token } from "../../token";
 import "./styles.css";
 
@@ -32,7 +26,9 @@ import {
     Selection,
     SelectionDropDown,
     SelectionDropDownItem,
-    CardContainer
+    CardContainer,
+    Label,
+    LabelAQI
 } from "./Style";
 
 import {
@@ -246,7 +242,7 @@ const InfoPage = () => {
                             await setO3Color("rgb(255,102,0)");
                         } else if (dataArr.iaqi.o3.v > 187 && dataArr.iaqi.o3.v <= 213) {
                             await setO3Color("rgb(255,51,0)");
-                        }else if (dataArr.iaqi.o3.v > 213 && dataArr.iaqi.o3.v <= 240) {
+                        } else if (dataArr.iaqi.o3.v > 213 && dataArr.iaqi.o3.v <= 240) {
                             await setO3Color("rgb(255,0,0)");
                         } else {
                             await setO3Color("rgb(255,0,102)");
@@ -277,7 +273,7 @@ const InfoPage = () => {
                             await setPM10Color("rgb(255,102,0)");
                         } else if (dataArr.iaqi.pm10.v > 58 && dataArr.iaqi.pm10.v <= 64) {
                             await setPM10Color("rgb(255,51,0)");
-                        }else if (dataArr.iaqi.pm10.v > 64 && dataArr.iaqi.pm10.v <= 70) {
+                        } else if (dataArr.iaqi.pm10.v > 64 && dataArr.iaqi.pm10.v <= 70) {
                             await setPM10Color("rgb(255,0,0)");
                         } else {
                             await setPM10Color("rgb(255,0,102)");
@@ -308,7 +304,7 @@ const InfoPage = () => {
                             await setPM25Color("rgb(255,102,0)");
                         } else if (dataArr.iaqi.pm25.v > 83 && dataArr.iaqi.pm25.v <= 91) {
                             await setPM25Color("rgb(255,51,0)");
-                        }else if (dataArr.iaqi.pm25.v > 91 && dataArr.iaqi.pm25.v <= 100) {
+                        } else if (dataArr.iaqi.pm25.v > 91 && dataArr.iaqi.pm25.v <= 100) {
                             await setPM25Color("rgb(255,0,0)");
                         } else {
                             await setPM25Color("rgb(255,0,102)");
@@ -415,11 +411,11 @@ const InfoPage = () => {
     const { size, ...rest } = useSpring({
         ref: springApi,
         config: config.stiff,
-        from: { size: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container1Translate ? 'translateY(100%)' : ( container1Scale ? "scale(1)" : "scale(1.1)" ) },
+        from: { size: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container1Translate ? 'translateY(100%)' : (container1Scale ? "scale(1)" : "scale(1.1)") },
         to: {
             size: open ? '30%' : cardSize,
             background: open ? 'rgb(0,0,0)' : 'rgb(0,0,0,0.2)',
-            transform: !container1Translate ? 'translateY(0%)' : ( container1Scale ? "scale(1.1)" : "scale(1)" ) ,
+            transform: !container1Translate ? 'translateY(0%)' : (container1Scale ? "scale(1.1)" : "scale(1)"),
         },
         onRest: () => { setAnimationComplete(true); setContainer1Translate(true); }
     })
@@ -428,11 +424,11 @@ const InfoPage = () => {
     const { size2, ...rest2 } = useSpring({
         ref: springApi2,
         config: config.stiff,
-        from: { size2: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container2Translate ? 'translateY(100%)' : ( container2Scale ? "scale(1)" : "scale(1.1)" ) },
+        from: { size2: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container2Translate ? 'translateY(100%)' : (container2Scale ? "scale(1)" : "scale(1.1)") },
         to: {
             size2: open2 ? '30%' : cardSize,
             background: open2 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
-            transform: !container2Translate ? 'translateY(0%)' : ( container2Scale ? "scale(1.1)" : "scale(1)" ) ,
+            transform: !container2Translate ? 'translateY(0%)' : (container2Scale ? "scale(1.1)" : "scale(1)"),
         },
         onRest: () => { setAnimationComplete2(true); setContainer2Translate(true); }
     })
@@ -441,11 +437,11 @@ const InfoPage = () => {
     const { size3, ...rest3 } = useSpring({
         ref: springApi3,
         config: config.stiff,
-        from: { size3: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container3Translate ? 'translateY(100%)' : ( container3Scale ? "scale(1)" : "scale(1.1)" ) },
+        from: { size3: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container3Translate ? 'translateY(100%)' : (container3Scale ? "scale(1)" : "scale(1.1)") },
         to: {
             size3: open3 ? '30%' : cardSize,
             background: open3 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
-            transform: !container3Translate ? 'translateY(0%)' : ( container3Scale ? "scale(1.1)" : "scale(1)" ) ,
+            transform: !container3Translate ? 'translateY(0%)' : (container3Scale ? "scale(1.1)" : "scale(1)"),
         },
         onRest: () => { setAnimationComplete3(true); setContainer3Translate(true); }
     })
@@ -454,11 +450,11 @@ const InfoPage = () => {
     const { size4, ...rest4 } = useSpring({
         ref: springApi4,
         config: config.stiff,
-        from: { size4: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container4Translate ? 'translateY(100%)' : ( container4Scale ? "scale(1)" : "scale(1.1)" ) },
+        from: { size4: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container4Translate ? 'translateY(100%)' : (container4Scale ? "scale(1)" : "scale(1.1)") },
         to: {
             size4: open4 ? '30%' : cardSize,
             background: open4 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
-            transform: !container4Translate ? 'translateY(0%)' : ( container4Scale ? "scale(1.1)" : "scale(1)" ) ,
+            transform: !container4Translate ? 'translateY(0%)' : (container4Scale ? "scale(1.1)" : "scale(1)"),
         },
         onRest: () => { setAnimationComplete4(true); setContainer4Translate(true); }
     })
@@ -467,11 +463,11 @@ const InfoPage = () => {
     const { size5, ...rest5 } = useSpring({
         ref: springApi5,
         config: config.stiff,
-        from: { size5: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container5Translate ? 'translateY(100%)' : ( container5Scale ? "scale(1)" : "scale(1.1)" ) },
+        from: { size5: cardSize, background: 'rgb(0,0,0, 0.2)', transform: !container5Translate ? 'translateY(100%)' : (container5Scale ? "scale(1)" : "scale(1.1)") },
         to: {
             size5: open5 ? '30%' : cardSize,
             background: open5 ? 'rgb(0,0,0)' : 'rgb(0,0,0, 0.2)',
-            transform: !container5Translate ? 'translateY(0%)' : ( container5Scale ? "scale(1.1)" : "scale(1)" ) ,
+            transform: !container5Translate ? 'translateY(0%)' : (container5Scale ? "scale(1.1)" : "scale(1)"),
         },
         onRest: () => { setAnimationComplete5(true); setContainer5Translate(true); }
     })
@@ -537,7 +533,7 @@ const InfoPage = () => {
                                         <SelectionDropDownItem id="min" value="min">Minimum</SelectionDropDownItem>
                                     </SelectionDropDown>
                                 </Selection>
-                                <LineChart width={appState.windowWidth} height={appState.windowHeight} style={{zIndex: graphZIndex}}>
+                                <LineChart width={appState.windowWidth} height={appState.windowHeight} style={{ zIndex: graphZIndex }}>
                                     <XAxis dataKey="day" type="category" allowDuplicatedCategory={false} />
                                     <YAxis dataKey={dataChoice} type="number" />
                                     <CartesianGrid strokeDasharray="3 3" />
@@ -560,10 +556,17 @@ const InfoPage = () => {
                     onClick={async () => { await set(!open); await setAnimationComplete(false); }}
                     onMouseEnter={async () => { if (!open) { await setContainer1Scale(true) } }}
                     onMouseLeave={async () => { if (!open) { await setContainer1Scale(false) } }}
-                    >
+                >
                     <CurrentAQIContainer>
-                        {!open && animationComplete ? <AQIPrompt><AQIPromptValue style={{color: AQIColor}}>{currentAQI != null ? currentAQI[0].value : "N/A"}</AQIPromptValue>AQI</AQIPrompt> : null}
-                        {open ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={AQIIndexImg} alt="AQI Index Levels"/></CurrentAQIDivTitle> : null}
+                        {!open && animationComplete ? <AQIPrompt><AQIPromptValue style={{ color: AQIColor }}>{currentAQI != null ? currentAQI[0].value : "N/A"}</AQIPromptValue>AQI</AQIPrompt> : null}
+                        {open ? <CurrentAQIDivTitle>
+                            <LabelAQI><p style={{ color: "green" }}>Green</p> - Good</LabelAQI>
+                            <LabelAQI><p style={{ color: "yellow" }}>Yellow</p> - Moderate</LabelAQI>
+                            <LabelAQI><p style={{ color: "orange" }}>Orange</p> - Unhealthy for Sensitive Groups</LabelAQI>
+                            <LabelAQI><p style={{ color: "red" }}>Red</p> - Unhealthy</LabelAQI>
+                            <LabelAQI><p style={{ color: "purple" }}>Purple</p> - Very Unhealthy</LabelAQI>
+                            <LabelAQI><p style={{ color: "maroon" }}>Maroon</p> - Hazardous</LabelAQI>
+                        </CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -573,10 +576,18 @@ const InfoPage = () => {
                     onClick={() => { set2(!open2); setAnimationComplete2(false); }}
                     onMouseEnter={async () => { if (!open2) { await setContainer2Scale(true) } }}
                     onMouseLeave={async () => { if (!open2) { await setContainer2Scale(false) } }}
-                    >
+                >
                     <CurrentAQIContainer>
-                        {!open2 && animationComplete2 ? <AQIPrompt><AQIPromptValue style={{color: COColor}}>{currentCO != null ? currentCO[0].value : "N/A"}</AQIPromptValue>CO</AQIPrompt> : null}
-                        {open2 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={COIndexImg} alt="CO Index Levels"/></CurrentAQIDivTitle> : null}
+                        {!open2 && animationComplete2 ? <AQIPrompt><AQIPromptValue style={{ color: COColor }}>{currentCO != null ? currentCO[0].value : "N/A"}</AQIPromptValue>CO</AQIPrompt> : null}
+                        {open2 ? <CurrentAQIDivTitle>
+                            <LabelAQI><p style={{ color: "rgb(0,228,0)" }}>0.0 - 4.4</p></LabelAQI>
+                            <LabelAQI><p style={{ color: "rgb(255,255,0)" }}>4.5 - 9.4</p></LabelAQI>
+                            <LabelAQI><p style={{ color: "rgb(255,126,0)" }}>9.5 - 12.4</p></LabelAQI>
+                            <LabelAQI><p style={{ color: "rgb(255,0,0)" }}>12.5 - 15.4</p></LabelAQI>
+                            <LabelAQI><p style={{ color: "rgb(255,255,0)" }}>15.5 - 30.4</p></LabelAQI>
+                            <LabelAQI><p style={{ color: "rgb(153,0,76)" }}>30.5 - 40.4</p></LabelAQI>
+                            <LabelAQI><p style={{ color: "rgb(126,0,35)" }}>More than 40.5 </p></LabelAQI>
+                        </CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -586,10 +597,21 @@ const InfoPage = () => {
                     onClick={() => { set3(!open3); setAnimationComplete3(false); }}
                     onMouseEnter={async () => { if (!open3) { await setContainer3Scale(true) } }}
                     onMouseLeave={async () => { if (!open3) { await setContainer3Scale(false) } }}
-                    >
+                >
                     <CurrentAQIContainer>
-                        {!open3 && animationComplete3 ? <AQIPrompt><AQIPromptValue style={{color: O3Color}}>{currentO3 != null ? currentO3[0].value : "N/A"}</AQIPromptValue>O3</AQIPrompt> : null}
-                        {open3 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={O3IndexImg} alt="O3 Index Levels"/></CurrentAQIDivTitle> : null}
+                        {!open3 && animationComplete3 ? <AQIPrompt><AQIPromptValue style={{ color: O3Color }}>{currentO3 != null ? currentO3[0].value : "N/A"}</AQIPromptValue>O3</AQIPrompt> : null}
+                        {open3 ? <CurrentAQIDivTitle>
+                            <Label><p style={{ color: "rgb(204,255,204)" }}>0 - 33</p></Label>
+                            <Label><p style={{ color: "rgb(102,255,102)" }}>34 - 66</p></Label>
+                            <Label><p style={{ color: "rgb(0,255,0)" }}>67 - 100</p></Label>
+                            <Label><p style={{ color: "rgb(153,255,0)" }}>101 - 120</p></Label>
+                            <Label><p style={{ color: "rgb(255,255,0)" }}>121 - 140</p></Label>
+                            <Label><p style={{ color: "rgb(255,204,0)" }}>141 - 160</p></Label>
+                            <Label><p style={{ color: "rgb(255,102,0)" }}>161 - 187 </p></Label>
+                            <Label><p style={{ color: "rgb(255,51,0)" }}>188 - 213 </p></Label>
+                            <Label><p style={{ color: "rgb(255,0,0)" }}>214 - 240 </p></Label>
+                            <Label><p style={{ color: "rgb(255,0,102)" }}>More than 240 </p></Label>
+                        </CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -600,10 +622,21 @@ const InfoPage = () => {
                     onClick={() => { set4(!open4); setAnimationComplete4(false); }}
                     onMouseEnter={async () => { if (!open4) { await setContainer4Scale(true) } }}
                     onMouseLeave={async () => { if (!open4) { await setContainer4Scale(false) } }}
-                    >
+                >
                     <CurrentAQIContainer>
-                        {!open4 && animationComplete4 ? <AQIPrompt><AQIPromptValue style={{color: PM10Color}}>{currentPM10 != null ? currentPM10[0].value : "N/A"}</AQIPromptValue>PM10</AQIPrompt> : null}
-                        {open4 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={PM10IndexImg} alt="PM10 Index Levels"/></CurrentAQIDivTitle> : null}
+                        {!open4 && animationComplete4 ? <AQIPrompt><AQIPromptValue style={{ color: PM10Color }}>{currentPM10 != null ? currentPM10[0].value : "N/A"}</AQIPromptValue>PM10</AQIPrompt> : null}
+                        {open4 ? <CurrentAQIDivTitle>
+                            <Label><p style={{ color: "rgb(204,255,204)" }}>0 - 16</p></Label>
+                            <Label><p style={{ color: "rgb(102,255,102)" }}>17 - 33</p></Label>
+                            <Label><p style={{ color: "rgb(0,255,0)" }}>34 - 50</p></Label>
+                            <Label><p style={{ color: "rgb(153,255,0)" }}>51 - 58</p></Label>
+                            <Label><p style={{ color: "rgb(255,255,0)" }}>59 - 66</p></Label>
+                            <Label><p style={{ color: "rgb(255,204,0)" }}>67 - 75</p></Label>
+                            <Label><p style={{ color: "rgb(255,102,0)" }}>76 - 83 </p></Label>
+                            <Label><p style={{ color: "rgb(255,51,0)" }}>84 - 91</p></Label>
+                            <Label><p style={{ color: "rgb(255,0,0)" }}>92 - 100</p></Label>
+                            <Label><p style={{ color: "rgb(255,0,102)" }}>More than 100</p></Label>
+                            </CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -614,10 +647,21 @@ const InfoPage = () => {
                     onClick={() => { set5(!open5); setAnimationComplete5(false); }}
                     onMouseEnter={async () => { if (!open5) { await setContainer5Scale(true) } }}
                     onMouseLeave={async () => { if (!open5) { await setContainer5Scale(false) } }}
-                    >
+                >
                     <CurrentAQIContainer>
-                        {!open5 && animationComplete5 ? <AQIPrompt><AQIPromptValue style={{color: PM25Color}}>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue>PM2.5</AQIPrompt> : null}
-                        {open5 ? <CurrentAQIDivTitle><img style={{position: "absolute", maxWidth: "90%", height: "90%", borderRadius: "5px"}} src={PM25IndexImg} alt="PM25 Index Levels"/></CurrentAQIDivTitle> : null}
+                        {!open5 && animationComplete5 ? <AQIPrompt><AQIPromptValue style={{ color: PM25Color }}>{currentPM25 != null ? currentPM25[0].value : "N/A"}</AQIPromptValue>PM2.5</AQIPrompt> : null}
+                        {open5 ? <CurrentAQIDivTitle>
+                            <Label><p style={{ color: "rgb(204,255,204)" }}>0 - 11</p></Label>
+                            <Label><p style={{ color: "rgb(102,255,102)" }}>12 - 23</p></Label>
+                            <Label><p style={{ color: "rgb(0,255,0)" }}>24 - 35</p></Label>
+                            <Label><p style={{ color: "rgb(153,255,0)" }}>36 - 41</p></Label>
+                            <Label><p style={{ color: "rgb(255,255,0)" }}>42 - 47</p></Label>
+                            <Label><p style={{ color: "rgb(255,204,0)" }}>48 - 53</p></Label>
+                            <Label><p style={{ color: "rgb(255,102,0)" }}>54 - 58</p></Label>
+                            <Label><p style={{ color: "rgb(255,51,0)" }}>59 - 64</p></Label>
+                            <Label><p style={{ color: "rgb(255,0,0)" }}>65 - 70</p></Label>
+                            <Label><p style={{ color: "rgb(255,0,102)" }}>More than 70</p></Label>
+                            </CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
             </CardContainer>

@@ -75,18 +75,25 @@ export const CurrentAQIContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
+    position: absolute;
+    left: 0;
+    top: 0;
 `;
 
 export const CurrentAQIDivTitle = styled.div`
-    position: relative;
     width: 100%;
     height: 100%;
     color: white;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 2rem;
+    justify-content: space-evenly;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    @media only screen and (max-width: 768px) {
+        flex-direction: row;
+    }
 `;
 
 export const CurrentAQIDiv = styled.div`
@@ -214,4 +221,20 @@ export const CardContainer = styled.div`
     justify-content: space-evenly;
     align-items: flex-end;
     z-index: 1;
+`;
+
+export const LabelAQI = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 1.5vh;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+`;
+
+export const Label = styled.div`
+    display: flex;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    flex-basis: 50%;
 `;
