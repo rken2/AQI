@@ -238,3 +238,12 @@ export const Label = styled.div`
     font-weight: 300;
     flex-basis: 50%;
 `;
+
+export const SearchAutoComplete = styled.input`
+    
+`;
+
+export const SearchAutoCompleteContainer = styled.div`
+    position: relative;
+    display: inline-block;
+`;

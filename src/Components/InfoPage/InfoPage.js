@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSpring, useSpringRef, useChain, animated, config } from 'react-spring';
-import Autocomplete from "react-google-autocomplete";
 
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
@@ -28,7 +27,9 @@ import {
     SelectionDropDownItem,
     CardContainer,
     Label,
-    LabelAQI
+    LabelAQI,
+    SearchAutoComplete,
+    SearchAutoCompleteContainer
 } from "./Style";
 
 import {
@@ -91,11 +92,75 @@ const InfoPage = () => {
     let [container5Translate, setContainer5Translate] = useState(false);
     let [container5Scale, setContainer5Scale] = useState(false);
 
+    let currentFocus = -1;
+
+    let closeAllLists = (element) => {
+        var x = document.getElementsByClassName("autocomplete-items");
+        let input = document.getElementById("myInput");
+
+        for (var i = 0; i < x.length; i++) {
+            if (element !== x[i] && element !== input) {
+                x[i].parentNode.removeChild(x[i]);
+            }
+        }
+    }
+
+    let addActive = (x) => {
+        if (!x) { return false; }
+
+        removeActive(x);
+
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+
+        x[currentFocus].setAttribute("class", "autocomplete-active");
+    }
+
+    let removeActive = (x) => {
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+    }
+
     useEffect(() => {
         if (window.innerWidth <= 768) {
             setLegendWidth(100);
             setCardSize("5%");
         }
+
+        let input = document.getElementById("myInput");
+
+        input.addEventListener("keydown", (e) => {
+            let innerItem = document.getElementById(input.id + "autocomplete-list");
+
+            console.log(currentFocus);
+
+            if (innerItem) {
+                innerItem = innerItem.getElementsByTagName("div");
+
+                if (innerItem.length) {
+                    if (e.keyCode === 40) {
+                        currentFocus++;
+
+                        addActive(innerItem);
+                    } else if (e.keyCode === 38) {
+                        currentFocus--;
+
+                        addActive(innerItem);
+                    } else if (e.keyCode === 13) {
+                        e.preventDefault();
+
+                        if (currentFocus > -1) {
+                            if (input) { innerItem[currentFocus].click() }
+                        }
+                    }
+                }
+            }
+        })
+
+        document.addEventListener("click", (e) => {
+            closeAllLists(e.target);
+        });
     }, []);
 
     useEffect(() => {
@@ -371,31 +436,22 @@ const InfoPage = () => {
             setError(false);
         }
 
-        if (inputValue.address_components === null || inputValue.address_components === undefined) {
-            setError(true);
+        let cityUrl = "https://aqi-city-3125.herokuapp.com/city/" + inputValue;
 
-            return;
-        } else {
-            setError(false);
-        }
-
-        if (inputValue !== null || inputValue !== undefined) {
-            let city = inputValue.address_components[0].long_name;
-
-            for (var i = 0; i < inputValue.address_components.length; i++) {
-                if (inputValue.address_components[i].types.includes("country")) {
-                    let country = inputValue.address_components[i].short_name;
-
-                    await dispatch(setCountry(country));
-
-                    break;
+        await fetch(cityUrl)
+            .then((resp) => resp.json())
+            .then(async (data) => {
+                console.log(data);
+                if (data.length) {
+                    await dispatch(setCountry(data[0].country));
+                    await dispatch(setLat(data[0].lat));
+                    await dispatch(setLong(data[0].lng));
+                    await dispatch(setCity(inputValue));
                 }
-            }
-
-            await dispatch(setLat(inputValue.geometry.location.lat()));
-            await dispatch(setLong(inputValue.geometry.location.lng()));
-            await dispatch(setCity(city));
-        }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     // Handle graph selection
@@ -407,6 +463,62 @@ const InfoPage = () => {
             setDataChoice("max");
         } else {
             setDataChoice("min");
+        }
+    }
+
+    let handleChange = async (e) => {
+        if (e.target.value === "") {
+            return;
+        }
+
+        let enteredCity = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1);
+
+        let cityUrl = "https://aqi-city-3125.herokuapp.com/city/" + enteredCity;
+
+        if (e.target.value !== "") {
+            await fetch(cityUrl)
+                .then((resp) => resp.json())
+                .then(async (data) => {
+                    closeAllLists();
+                    currentFocus = -1;
+
+                    let itemDiv = document.createElement("div");
+                    let input = document.getElementById("myInput");
+
+                    itemDiv.setAttribute("id", input.id + "autocomplete-list");
+                    itemDiv.setAttribute("class", "autocomplete-items");
+
+                    let inputContainer = document.getElementById("inputContainer");
+                    inputContainer.appendChild(itemDiv);
+
+                    for (var i = 0; i < data.length; i++) {
+                        if (i === 6) { break; }
+
+                        if (data[i].name.substring(0, e.target.value.length).toUpperCase() === e.target.value.toUpperCase()) {
+                            let innerItemDiv = document.createElement("div");
+                            innerItemDiv.innerHTML = "<strong>" + data[i].name.substr(0, e.target.value.length) + "</strong>";
+                            innerItemDiv.innerHTML += data[i].name.substr(e.target.value.length);
+
+                            innerItemDiv.innerHTML += "<input type='hidden' value='" + data[i].name + "'>";
+
+                            innerItemDiv.addEventListener("click", (e) => {
+                                if (!e) {
+                                    return;
+                                }
+                                
+                                input.value = e.target.innerText;
+                                setInputValue(e.target.innerText);
+
+                                closeAllLists();
+                            });
+
+                            itemDiv.appendChild(innerItemDiv);
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 
@@ -501,19 +613,10 @@ const InfoPage = () => {
             <SearchContainer>
                 <SearchForm onSubmit={handleSubmit}>
                     {error ? <div style={{ color: "white" }}>Please select a valid city from the dropdown</div> : null}
-                    <Autocomplete
-                        id="searchInput"
-                        placeholder="Enter a City"
-                        apiKey={'AIzaSyBwzZ4Rd9vyA918srpcnfl_uY8uF5O_I3A'}
-                        options={{
-                            types: ["(cities)"],
-                        }}
-                        onPlaceSelected={async (place) => {
-                            await setInputValue(place);
-                        }}
-                        size="40"
-                        style={{ borderRadius: "5px", border: "0", boxSizing: "border-box", outlin: "none", backgroundColor: "rgb(31,31,31)", color: "white", height: "25px", padding: "2% 2.5%" }}
-                    />
+                    <SearchAutoCompleteContainer id="inputContainer">
+                        <SearchAutoComplete onChange={handleChange} id="myInput" placeholder="City">
+                        </SearchAutoComplete>
+                    </SearchAutoCompleteContainer>
                     <SearchSubmit type="submit" />
                 </SearchForm>
             </SearchContainer>
@@ -636,7 +739,7 @@ const InfoPage = () => {
                             <Label><p style={{ color: "rgb(255,51,0)" }}>84 - 91</p></Label>
                             <Label><p style={{ color: "rgb(255,0,0)" }}>92 - 100</p></Label>
                             <Label><p style={{ color: "rgb(255,0,102)" }}>More than 100</p></Label>
-                            </CurrentAQIDivTitle> : null}
+                        </CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
 
@@ -661,7 +764,7 @@ const InfoPage = () => {
                             <Label><p style={{ color: "rgb(255,51,0)" }}>59 - 64</p></Label>
                             <Label><p style={{ color: "rgb(255,0,0)" }}>65 - 70</p></Label>
                             <Label><p style={{ color: "rgb(255,0,102)" }}>More than 70</p></Label>
-                            </CurrentAQIDivTitle> : null}
+                        </CurrentAQIDivTitle> : null}
                     </CurrentAQIContainer>
                 </animated.div>
             </CardContainer>

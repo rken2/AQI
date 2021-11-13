@@ -21,8 +21,15 @@ export const SearchForm = styled.form`
     flex-direction: row;
 `;
 
-export const SearchAutoComplete = styled.div`
-    
+export const SearchAutoComplete = styled.input`
+    border-radius: 5px;
+    height: 3vh;
+    width: 25vw;
+`;
+
+export const SearchAutoCompleteContainer = styled.div`
+    position: relative;
+    display: inline-block;
 `;
 
 export const SearchSubmit = styled.input`

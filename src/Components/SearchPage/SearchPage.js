@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSpring, animated } from 'react-spring';
-import Autocomplete from "react-google-autocomplete";
 
 import {
     SearchMain,
@@ -10,7 +9,8 @@ import {
     SearchForm,
     SearchSubmit,
     SearchTitle,
-    SearchAutoComplete
+    SearchAutoComplete,
+    SearchAutoCompleteContainer
 } from "./Style";
 
 import {
@@ -26,12 +26,68 @@ const SearchPage = () => {
     let [inputValue, setInputValue] = useState(null);
     let [submission, setSubmission] = useState(false);
     let [error, setError] = useState(false);
-    let [size, setSize] = useState(60);
+    var currentFocus = -1;
+
+    let closeAllLists = (element) => {
+        var x = document.getElementsByClassName("autocomplete-items");
+        let input = document.getElementById("myInput");
+
+        for (var i = 0; i < x.length; i++) {
+            if (element != x[i] && element != input) {
+                x[i].parentNode.removeChild(x[i]);
+            }
+        }
+    }
+
+    let addActive = (x) => {
+        if (!x) { return false; }
+
+        removeActive(x);
+
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+
+        x[currentFocus].setAttribute("class", "autocomplete-active");
+    }
+
+    let removeActive = (x) => {
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+    }
 
     useEffect(() => {
-        if (window.innerWidth <= 768) {
-            setSize(30);
-        }
+        let input = document.getElementById("myInput");
+
+        input.addEventListener("keydown", (e) => {
+            let innerItem = document.getElementById(input.id + "autocomplete-list");
+
+            if (innerItem) {
+                innerItem = innerItem.getElementsByTagName("div");
+
+                if (innerItem.length) {
+                    if (e.keyCode == 40) {
+                        currentFocus++;
+
+                        addActive(innerItem);
+                    } else if (e.keyCode == 38) {
+                        currentFocus--;
+
+                        addActive(innerItem);
+                    } else if (e.keyCode == 13) {
+                        e.preventDefault();
+
+                        if (currentFocus > -1) {
+                            if (input) { innerItem[currentFocus].click() }
+                        }
+                    }
+                }
+            }
+        })
+
+        document.addEventListener("click", (e) => {
+            closeAllLists(e.target);
+        });
     }, []);
 
     // UI Effects
@@ -86,32 +142,79 @@ const SearchPage = () => {
             setError(false);
         }
 
-        if (inputValue.address_components == null || inputValue.address_components == undefined) {
-            setError(true);
+        let cityUrl = "https://aqi-city-3125.herokuapp.com/city/" + inputValue;
 
-            return;
-        } else {
-            setError(false);
-        }
+        await fetch(cityUrl)
+                .then((resp) => resp.json())
+                .then(async (data) => {
+                    console.log(data);
+                    if (data.length) {
+                        await dispatch(setCity(inputValue));
+                        await dispatch(setCountry(data[0].country));
+                        await dispatch(setLat(data[0].lat));
+                        await dispatch(setLong(data[0].lng));
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
 
         await setSubmission(true);
+    }
 
-        if (inputValue != null || inputValue != undefined) {
-            let city = inputValue.address_components[0].long_name;
+    let handleChange = async (e) => {
+        if (e.target.value === "") {
+            return;
+        }
 
-            for (var i = 0; i < inputValue.address_components.length; i++) {
-                if (inputValue.address_components[i].types.includes("country")) {
-                    let country = inputValue.address_components[i].short_name;
+        let enteredCity = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1);
 
-                    await dispatch(setCountry(country));
+        let cityUrl = "https://aqi-city-3125.herokuapp.com/city/" + enteredCity;
 
-                    break;
-                }
-            }
-            
-            await dispatch(setLat(inputValue.geometry.location.lat()));
-            await dispatch(setLong(inputValue.geometry.location.lng()));
-            await dispatch(setCity(city));
+        if (e.target.value != "") {
+            await fetch(cityUrl)
+                .then((resp) => resp.json())
+                .then(async (data) => {
+                    closeAllLists();
+                    currentFocus = -1;
+
+                    let itemDiv = document.createElement("div");
+                    let input = document.getElementById("myInput");
+
+                    itemDiv.setAttribute("id", input.id + "autocomplete-list");
+                    itemDiv.setAttribute("class", "autocomplete-items");
+
+                    let inputContainer = document.getElementById("inputContainer");
+                    inputContainer.appendChild(itemDiv);
+
+                    for (var i = 0; i < data.length; i++) {
+                        if (i == 6) { break; }
+
+                        if (data[i].name.substring(0, e.target.value.length).toUpperCase() === e.target.value.toUpperCase()) {
+                            let innerItemDiv = document.createElement("div");
+                            innerItemDiv.innerHTML = "<strong>" + data[i].name.substr(0, e.target.value.length) + "</strong>";
+                            innerItemDiv.innerHTML += data[i].name.substr(e.target.value.length);
+
+                            innerItemDiv.innerHTML += "<input type='hidden' value='" + data[i].name + "'>";
+
+                            innerItemDiv.addEventListener("click", (e) => {
+                                if (!e) {
+                                    return;
+                                }
+                                
+                                input.value = e.target.innerText;
+                                setInputValue(e.target.innerText);
+
+                                closeAllLists();
+                            });
+
+                            itemDiv.appendChild(innerItemDiv);
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 
@@ -123,23 +226,12 @@ const SearchPage = () => {
                 </animated.div>
                 <animated.div style={slideInDownSearch}>
                     <SearchInput>
-                        {error ? <div style={{color: "white"}}>Please select a valid city from the dropdown</div> : null}
+                        {error ? <div style={{ color: "white" }}>Please select a valid city from the dropdown</div> : null}
                         <SearchForm onSubmit={handleSubmit}>
-                            <SearchAutoComplete>
-                                <Autocomplete
-                                    id="searchInput"
-                                    placeholder="Enter a City"
-                                    apiKey={'AIzaSyBwzZ4Rd9vyA918srpcnfl_uY8uF5O_I3A'}
-                                    options={{
-                                        types: ["(cities)"],
-                                    }}
-                                    onPlaceSelected={async (place) => {
-                                        await setInputValue(place);
-                                    }}
-                                    size={size}
-                                    style={{ borderRadius: "5px", height: "3vh" }}
-                                />
-                            </SearchAutoComplete>
+                            <SearchAutoCompleteContainer id="inputContainer">
+                                <SearchAutoComplete onChange={handleChange} id="myInput" placeholder="City" autocomplete="off">
+                                </SearchAutoComplete>
+                            </SearchAutoCompleteContainer>
                             <SearchSubmit type="submit" />
                         </SearchForm>
                     </SearchInput>
