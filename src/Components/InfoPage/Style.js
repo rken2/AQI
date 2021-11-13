@@ -11,7 +11,7 @@ export const SearchContainer = styled.div`
     position: absolute;
     right: 5%;
     top 3%;
-    z-index: 2;
+    z-index: 3;
 
     @media only screen and (max-width: 768px) {
         right: unset;

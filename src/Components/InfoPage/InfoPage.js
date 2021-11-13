@@ -505,7 +505,7 @@ const InfoPage = () => {
                                 if (!e) {
                                     return;
                                 }
-                                
+
                                 input.value = e.target.innerText;
                                 setInputValue(e.target.innerText);
 
