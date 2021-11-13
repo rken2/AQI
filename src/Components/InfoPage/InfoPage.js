@@ -132,6 +132,7 @@ const InfoPage = () => {
         }
     }, [O3Data, PM10Data, PM25Data]);
 
+    // Fetch AQI data from API
     useEffect(() => {
         let fetchAQIData = async () => {
             // get AQI City information
@@ -343,6 +344,7 @@ const InfoPage = () => {
         }
     }, [appState.city]);
 
+    // Handle city input
     let handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -396,6 +398,7 @@ const InfoPage = () => {
         }
     }
 
+    // Handle graph selection
     let handleSelection = (event) => {
         console.log(event.target.value);
         if (event.target.value === "avg") {
@@ -407,6 +410,7 @@ const InfoPage = () => {
         }
     }
 
+    // UI Effects
     const springApi = useSpringRef()
     const { size, ...rest } = useSpring({
         ref: springApi,
@@ -483,13 +487,9 @@ const InfoPage = () => {
     })
 
     useChain(open || container1Scale ? [springApi] : [springApi]);
-
     useChain(open2 || container2Scale ? [springApi2] : [springApi2]);
-
     useChain(open3 || container3Scale ? [springApi3] : [springApi3]);
-
     useChain(open4 || container4Scale ? [springApi4] : [springApi4]);
-
     useChain(open5 || container5Scale ? [springApi5] : [springApi5]);
 
     useChain(appState.submission ? [springApi, springApi2, springApi3, springApi4, springApi5] : null);

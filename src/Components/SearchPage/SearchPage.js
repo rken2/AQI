@@ -34,6 +34,7 @@ const SearchPage = () => {
         }
     }, []);
 
+    // UI Effects
     const slideInDownTitle = useSpring({
         from: {
             transform: !submission ? 'translateY(-50%)' : null,
